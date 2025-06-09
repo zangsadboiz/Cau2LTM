@@ -1,0 +1,86 @@
+package RMI;
+
+import com.sun.org.apache.regexp.internal.RE;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+/**
+ * Created by Admin on 5/27/2017.
+ */
+public interface GiaiThua extends Remote {
+    public int giaiThua (int n) throws RemoteException;
+    public int tong(int n) throws RemoteException;
+    // dinh nghia~ cac phuong thuc
+// là 1 bộ hành vi 
+}
+--------------------------------------------------
+giai thừa implement
+package RMI;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+/**
+ * Created by Admin on 5/27/2017.
+ */
+public class GiaiThuaIMP extends UnicastRemoteObject implements GiaiThua{
+    public GiaiThuaIMP() throws RemoteException{
+        super();        //goi toi phuong thuc khoi tao lop cha hoặc gọi tới phương thức khởi tạo bậc cha
+    }
+    @Override
+    public int giaiThua(int n) throws RemoteException {
+        int GiaiThua = 0;
+        for (int i = 1; i <= n; i++){
+            GiaiThua = GiaiThua*i;
+        }
+        return GiaiThua;
+    }
+
+    @Override
+    public int tong(int n) throws RemoteException {
+        int sum = 0;
+        for (int i = 1; i <= n; i++){
+            sum = sum +i;
+        }
+        return sum;
+    }
+}
+// dùng để thực thi các bộ hành vi
+
+------------------------------------------------
+giai thừa server 
+package RMI;
+
+import java.rmi.Naming;
+
+/**
+ * Created by Admin on 5/27/2017.
+ */
+public class GiaiThuaServer {
+    public static void main(String[] args ) throws Exception{
+        GiaiThuaIMP stub = new GiaiThuaIMP();
+        Naming.rebind("rmi://localhost/stub",stub); // dang ky dich vu RMI
+        System.out.print("Server da san sang");ja
+    }
+}
+
+-----------------------------------------------------------
+Giai thừa Client
+package RMI;
+
+import java.rmi.Naming;
+
+/**
+ * Created by Admin on 5/27/2017.
+ */
+public class GiaiThuaClient {
+    public static void main(String[] args ) throws Exception{
+        GiaiThua stub = (GiaiThua) Naming.lookup("rmi://localhost/stub");
+        int giaiThua = stub.giaiThua(3);
+        int tong = stub.tong(10);
+        System.out.print("Tong " + tong);
+        System.out.print("Giai thua " + giaiThua);
+
+    }
+}
